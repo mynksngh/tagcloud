@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% load static %}
-
+{% block title %} Search your Word in Text File {% endblock %}
 {% block content %}
   <p><strong> We are searching <em>{{word}}</em> and here the lines containing <em>{{word}}</em>  : </strong></p>
   {% if msg %}
