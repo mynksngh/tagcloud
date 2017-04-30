@@ -1,3 +1,0 @@
-If you can’t think of an obvious place to put your templates, we recommend creating a templates 
-directory within your Django project (i.e., within the mysite directory you created in Chapter 2, 
-if you’ve been following along with our examples).

@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from tokenize import *
+from utils.generate_token import get_words as process_token
+from utils.cleanwords import do_clean_text
+from utils.generate_frequencies import generate_frequencies
+from utils.linkedcloud import find_word
 
 
 def index(request):
@@ -17,7 +17,6 @@ def simple_upload(request):
         file = myfile
         try:
             content_type = file.content_type
-            print content_type
             if not content_type in ['text/plain']:
                 context = {
                     'msg': 'Invalid File Type, Please Upload a Text File Only'
@@ -28,12 +27,17 @@ def simple_upload(request):
         fs = FileSystemStorage()
         filename = fs.save(myfile.name, myfile)
         uploaded_file_url = fs.url(filename)
-        data = get_words(filename)
-        link_data = list_dictionary(filename)
+        # Step 1:
+        tokens = process_token(filename)
+        # Step2: It will clean the words/tokens : all the noise words, removes punctuation,
+        # removes words which are just numbers , It will get the all words in lower
+        clean_words_list = do_clean_text(tokens)
+        # Step 3,4 : It will Cover all cleaned tokens with their frequencies in sorted dict
+        # data = get_words(filename)
+        data = generate_frequencies(clean_words_list)
         context = {
             'uploaded_file_url': uploaded_file_url,
             'freq_data': data,
-            'link_data': link_data,
             'filename': filename,
             'msg': '',
         }
@@ -41,37 +45,33 @@ def simple_upload(request):
     context = {}
     return render(request, 'file_upload.html', context)
 
+
 def show_line(request):
     if request.method == 'GET':
-        myfile = request.GET['file']
+        my_file = request.GET['file']
         word = request.GET['word']
-        word = word.upper()
-        # link_data = list_dictionary(myfile)
-        line_list = []
-        word_count = 0
-        with open('media/'+myfile) as db_file:
-            for line_no, line in enumerate(db_file):
-                line = line.lower()
-                word = word.lower()
-                r = re.compile(r'\b%s\b' % word, flags=re.I | re.X)
-                if r.findall(line):
-                    line_list.append(line)
-                    word_count += 1
-                else:
-                    pass
-        if word_count:
-            context = {
-                'filename': myfile,
-                'line_list': line_list,
-                'msg': '',
-                'word': word,
-            }
+        if my_file and word:
+            search_result = find_word(my_file, word)
+            word_count_occurance = search_result.get("word_count", 0)
+            line_contains_word = search_result.get("line_contains_word", [])
+            if word_count_occurance:
+                context = {
+                    'filename': my_file,
+                    'line_list': line_contains_word,
+                    'msg': '',
+                    'word': word,
+                }
+            else:
+                context = {
+                    'msg': 'Unable to Find the %s in File' % word,
+                    'word': word,
+                }
+            return render(request, 'show_text_lines.html', context)
         else:
             context = {
-                'msg': 'Unable to Find the %s in File' % word,
-                'word': word,
+                'msg': 'Please select the word and file from correct url'
             }
-        return render(request, 'show_text_lines.html', context)
+            return render(request, 'show_text_lines.html', context)
     context = {
         'msg': 'Unable to Find the word in any line of the file',
     }
