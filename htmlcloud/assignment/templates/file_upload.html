@@ -20,7 +20,7 @@ Please Upload a valid Text File : <br /> <br />
     <table>
       {% for key, value in freq_data %}
         <tr>
-            <td style="font-size: {% widthratio value 1 500 %}%"> <a href="/assignment/showline/?word={{ key }}&file={{ filename }}" target="_blank"> {{ key }} </a> </td>
+            <td style="font-size: {% widthratio value 1 500 %}%"> <a href="/showline/?word={{ key }}&file={{ filename }}" target="_blank"> {{ key }} </a> </td>
         </tr>
       {% endfor %}
     </table>
