@@ -1,0 +1,3 @@
+# Common requirements
+
+django>=1.9, <1.11
