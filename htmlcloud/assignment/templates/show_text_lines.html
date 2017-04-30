@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+  <p><strong> We are searching <em>{{word}}</em> and here the lines containing <em>{{word}}</em>  : </strong></p>
+  {% if msg %}
+    {{ msg }}
+  {% endif %}
+  {% if filename %}
+   {% for i in line_list %}
+        <div class="user_pod">
+            <p> > {{ i }}</p> <br/>
+        </div>
+    {% endfor %}
+  {% endif %}
+{% endblock %}

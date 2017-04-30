@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Input Text File{% endblock %}
+{% block content %}
+<hr/>
+Please Upload a valid Text File : <br /> <br />
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="myfile" required="true">
+    <button type="submit">Process Text File</button>
+  </form>
+<hr/>
+<br/>
+<p style="color:red">{{ msg }}</p>
+  {% if uploaded_file_url %}
+    <hr/>
+    Output
+    <h4>HTML Cloud Display</h4>
+    <hr/>
+    <table>
+      {% for key, value in freq_data %}
+        <tr>
+            <td style="font-size: {% widthratio value 1 500 %}%"> <a href="/assignment/showline/?word={{ key }}&file={{ filename }}" target="_blank"> {{ key }} </a> </td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+{% endblock %}

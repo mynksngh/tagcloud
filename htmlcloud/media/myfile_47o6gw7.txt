@@ -1,0 +1,14 @@
+Advanced Demuffin will then start converting the disk.	After the disk has been
+converted, and Advanced Demuffin displays this message "PRESS ANY KEY TO
+CONTINUE", you should write down all the sectors that read errors on them.  If
+you have a printer, all you have to do is press the slot number of the printer,
+and Advanced Demuffin will dump the screen to the printer.
+
+You should then re-convert the sectors that had read errors (use at least
+2-retries).  If those sectors don't convert this time, they are probably just
+un-written DOS 3.2 sectors.
+
+Use Super Copy III or Master Create to copy dos on to the target disk.	You
+should then rename the "hello" program from ^HELLO to HELLO.
+
+You should then have (hopefully) a cracked copy of Castle Wolfenstein!
